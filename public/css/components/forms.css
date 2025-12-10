@@ -1,0 +1,22 @@
+.response-form {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+textarea {
+  min-height: 120px;
+  border-radius: 12px;
+  border: 1px solid #c6d4ef;
+  padding: 0.75rem;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+

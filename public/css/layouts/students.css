@@ -1,0 +1,110 @@
+/* Split panel inspired by Claude: prompt left, response right */
+.students-shell {
+  display: flex;
+  gap: 0;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid #d7e1fb;
+  background: #fff;
+  min-height: calc(100vh - 180px);
+}
+
+.prompt-panel,
+.response-panel {
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.prompt-panel {
+  flex: 1 1 44%;
+  background: #0c1220;
+  color: #dce6ff;
+  gap: 1.5rem;
+}
+
+.prompt-panel h2,
+.prompt-panel h3,
+.prompt-panel p,
+.prompt-panel li {
+  color: #dce6ff;
+}
+
+.prompt-panel .subtitle {
+  color: rgba(220, 230, 255, 0.8);
+}
+
+.prompt-images {
+  margin-top: auto;
+}
+
+.prompt-images .image-grid {
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+}
+
+.response-panel {
+  flex: 1 1 56%;
+  background: #f7f8fd;
+  border-left: 1px solid #d7e1fb;
+  gap: 1.25rem;
+}
+
+.response-panel .conversation {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.25rem;
+  border: 1px solid #e0e8ff;
+  flex: 1;
+  overflow-y: auto;
+  max-height: calc(100vh - 400px);
+  min-height: 200px;
+}
+
+.conversation-entry {
+  border-bottom: 1px solid #eef1fb;
+  padding: 0.85rem 0;
+}
+
+.conversation-entry:last-child {
+  border-bottom: none;
+}
+
+.conversation-entry h3 {
+  margin-bottom: 0.25rem;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #7480a7;
+}
+
+.response-form {
+  background: #fff;
+  border: 1px solid #e0e8ff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  flex-shrink: 0;
+}
+
+@media (max-width: 992px) {
+  .students-shell {
+    flex-direction: column;
+    border-radius: 12px;
+  }
+
+  .response-panel {
+    border-left: none;
+    border-top: 1px solid #d7e1fb;
+  }
+
+  .prompt-panel,
+  .response-panel {
+    padding: 1.75rem 1.25rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .prompt-panel {
+    gap: 1rem;
+  }
+}
+
