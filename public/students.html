@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en" ng-app="radOncAIApp">
+<head>
+  <meta charset="utf-8">
+  <title>RadOncAI Exam Simulator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body ng-controller="ExamController as vm">
+
+  <div ng-include="'components/navbar.html'"></div>
+
+  <main class="container students-shell">
+    <section class="prompt-panel">
+      <div>
+        <p class="eyebrow text-uppercase">Question</p>
+        <h2>Question</h2>
+        <p class="subtitle">Answer the question based on the information provided.</p>
+      </div>
+
+      <div class="prompt-question">
+        <h3>Sample Guideline Question</h3>
+        <p>{{ vm.currentQuestion }}</p>
+      </div>
+
+      <div class="prompt-hints">
+        <div class="d-flex justify-content-between align-items-center">
+          <h3>Guidance</h3>
+          <button class="btn ghost" ng-click="vm.toggleHints()">
+            {{ vm.showHints ? 'Hide' : 'Show' }} notes
+          </button>
+        </div>
+        <ul ng-if="vm.showHints">
+          <li>State staging clearly before management.</li>
+          <li>Describe imaging findings, size, and nodal status.</li>
+          <li>Outline OAR constraints and follow-up.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="response-panel">
+      <div class="chat-header">
+        <div>
+          <h2>Response Workspace</h2>
+          <small>Timer: {{ vm.elapsed | date:'mm:ss' }}</small>
+        </div>
+        <button class="btn ghost" ng-click="vm.resetSession()">Reset Case</button>
+      </div>
+
+      <div class="conversation" aria-live="polite">
+        <p class="text-muted" ng-if="!vm.answerHistory.length">Your conversation history will appear here.</p>
+        <article class="conversation-entry" ng-repeat="entry in vm.answerHistory track by $index">
+          <h3>{{ entry.role === 'candidate' ? 'You' : 'Examiner' }}</h3>
+          <p>{{ entry.message }}</p>
+        </article>
+      </div>
+
+      <form class="response-form" ng-submit="vm.sendAnswer()">
+        <label for="answer">Compose your response</label>
+        <textarea id="answer" ng-model="vm.answer" placeholder="Summarize findings, staging, and management plan..." 
+          ng-keydown="vm.handleAnswerKeydown($event)" required></textarea>
+        <div class="actions">
+          <button type="button" class="btn ghost" ng-click="vm.answer = ''">Clear</button>
+          <button type="submit" class="btn primary">Send Response</button>
+        </div>
+      </form>
+    </section>
+  </main>
+  
+  <div ng-include="'components/chat-widget.html'"></div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.3/angular.min.js"></script>
+  <script src="https://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-2.5.0.js"></script>
+  
+  <script src="app.js"></script>
+
+</body>
+</html>
