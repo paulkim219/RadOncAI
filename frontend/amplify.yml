@@ -1,0 +1,25 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        # Set the API endpoint from environment variable
+        - |
+          if [ -z "$API_BASE_URL" ]; then
+            echo "API_BASE_URL not set, using default localhost"
+            echo "window.API_BASE_URL = 'http://localhost:3000';" > public/config.js
+          else
+            echo "Setting API_BASE_URL to $API_BASE_URL"
+            echo "window.API_BASE_URL = '$API_BASE_URL';" > public/config.js
+          fi
+          cat public/config.js
+    build:
+      commands:
+        - echo "Build phase - static site, no build commands needed"
+  artifacts:
+    baseDirectory: public
+    files:
+      - '**/*'
+  cache:
+    paths: []
+

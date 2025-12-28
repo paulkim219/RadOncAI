@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en" ng-app="radOncAIApp">
+<head>
+  <meta charset="utf-8">
+  <title>RadOncAI Questionnaire Builder</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body ng-controller="QuestionnaireController as vm">
+
+  <div ng-include="'components/navbar.html'"></div>
+
+  <main class="container students-shell">
+    <section class="prompt-panel">
+      <div>
+        <p class="eyebrow text-uppercase">Questionnaire JSON</p>
+        <h2>Preview</h2>
+        <p class="subtitle">The questionnaire JSON will update as you add questions in the chat.</p>
+      </div>
+
+      <div class="json-preview-container">
+        <div class="json-header">
+          <button class="btn ghost" ng-click="vm.downloadJSON()" style="font-size: 0.85rem; padding: 0.5rem 1rem;">
+            Download JSON
+          </button>
+          <button class="btn ghost" ng-click="vm.clearQuestionnaire()" style="font-size: 0.85rem; padding: 0.5rem 1rem;">
+            Clear All
+          </button>
+        </div>
+        <pre class="json-preview">{{ vm.questionnaireJSON }}</pre>
+      </div>
+
+      <!-- Questions List -->
+      <div class="questions-list-container" ng-if="vm.questionnaire.questions.length > 0">
+        <h3 style="margin-bottom: 1rem; font-size: 1.1rem;">Questions ({{ vm.questionnaire.questions.length }})</h3>
+        <div class="question-item" ng-repeat="question in vm.questionnaire.questions track by $index">
+          <div class="question-content">
+            <div class="question-header">
+              <span class="question-id">{{ question.id }}</span>
+              <span class="question-type-badge">{{ question.type }}</span>
+            </div>
+            <p class="question-text">{{ question.text }}</p>
+            <div ng-if="question.options && question.options.length > 0" class="question-options">
+              <small>Options: {{ question.options.join(', ') }}</small>
+            </div>
+          </div>
+          <button class="btn-delete" ng-click="vm.deleteQuestion($index)" title="Delete question">
+            ×
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="response-panel">
+      <div class="chat-header">
+        <div>
+          <h2>Question Builder Chat</h2>
+          <small>Enter questions and details to build your questionnaire</small>
+        </div>
+        <button class="btn ghost" ng-click="vm.resetChat()">Clear Chat</button>
+      </div>
+
+      <div class="conversation" aria-live="polite">
+        <p class="text-muted" ng-if="!vm.chatHistory.length">
+          Start by entering a question. For example:<br>
+          "Add a multiple choice question: What is the recommended dose for prostate cancer?"<br>
+          "Add a text question: Describe the treatment plan"<br>
+          "Add a yes/no question: Is the patient eligible for treatment?"
+        </p>
+        <article class="conversation-entry" ng-repeat="entry in vm.chatHistory track by $index">
+          <h3>{{ entry.role === 'user' ? 'You' : 'System' }}</h3>
+          <p>{{ entry.message }}</p>
+          <small ng-if="entry.questionAdded" style="color: #4E2A84; font-weight: bold;">
+            ✓ Question added to questionnaire
+          </small>
+          <small ng-if="entry.questionDeleted" style="color: #d32f2f; font-weight: bold;">
+            ✗ Question deleted from questionnaire
+          </small>
+        </article>
+        <div ng-if="vm.isLoading" class="loading-indicator">
+          <p>Processing your question...</p>
+        </div>
+      </div>
+
+      <form class="response-form" ng-submit="vm.sendQuestion()">
+        <label for="questionInput">Enter question information</label>
+        <textarea id="questionInput" ng-model="vm.questionInput" 
+          placeholder="Example: Add a multiple choice question about treatment options with options: Surgery, Radiation, Chemotherapy" 
+          ng-keydown="vm.handleQuestionKeydown($event)" required></textarea>
+        <div class="actions">
+          <button type="button" class="btn ghost" ng-click="vm.questionInput = ''">Clear</button>
+          <button type="submit" class="btn primary" ng-disabled="vm.isLoading">Add Question</button>
+        </div>
+      </form>
+    </section>
+  </main>
+  
+  <div ng-include="'components/chat-widget.html'"></div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.3/angular.min.js"></script>
+  <script src="https://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-2.5.0.js"></script>
+  
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+  <script src="questionnaire-controller.js"></script>
+
+</body>
+</html>
